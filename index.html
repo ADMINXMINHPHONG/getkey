@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HONGHAC. BUILDA - Key Verification</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
     <style>
         /* --- RESET & BASIC SETUP --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
-            overflow: hidden; /* Tránh thanh cuộn thừa */
+            overflow: hidden;
+            /* Tránh thanh cuộn thừa */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -26,9 +32,17 @@
         }
 
         @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* --- CARD CONTAINER (GLASSMORPHISM) --- */
@@ -49,8 +63,15 @@
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* --- BRAND TITLE EFFECT --- */
@@ -70,7 +91,7 @@
             animation: shine 3s linear infinite;
             position: relative;
         }
-        
+
         /* Hiệu ứng bóng sáng dưới chữ */
         .brand-title::after {
             content: '';
@@ -86,7 +107,9 @@
         }
 
         @keyframes shine {
-            to { background-position: 200% center; }
+            to {
+                background-position: 200% center;
+            }
         }
 
         /* --- STATUS ICONS & TEXT --- */
@@ -95,13 +118,13 @@
             margin-bottom: 15px;
             transition: all 0.3s ease;
         }
-        
+
         .result-title {
             font-size: 1.4rem;
             font-weight: 600;
             margin-bottom: 10px;
         }
-        
+
         .result-msg {
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
@@ -110,9 +133,19 @@
         }
 
         /* Màu trạng thái */
-        .valid { color: #00ff88; text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
-        .expired { color: #ff4b2b; text-shadow: 0 0 15px rgba(255, 75, 43, 0.4); }
-        .error { color: #ffcc00; }
+        .valid {
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .expired {
+            color: #ff4b2b;
+            text-shadow: 0 0 15px rgba(255, 75, 43, 0.4);
+        }
+
+        .error {
+            color: #ffcc00;
+        }
 
         /* --- KEY BOX --- */
         .key-box {
@@ -151,8 +184,13 @@
             box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
         }
 
-        .copy-btn:active { transform: scale(0.95); }
-        .copy-btn:hover { box-shadow: 0 0 15px rgba(0, 198, 255, 0.6); }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .copy-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 198, 255, 0.6);
+        }
 
         /* --- TIMER --- */
         .timer-badge {
@@ -171,6 +209,7 @@
             width: 50px;
             height: 50px;
         }
+
         .loader-ring:after {
             content: " ";
             display: block;
@@ -182,19 +221,34 @@
             border-color: #fff transparent #fff transparent;
             animation: ring 1.2s linear infinite;
         }
+
         @keyframes ring {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* --- MOBILE ADJUSTMENTS --- */
         @media (max-width: 480px) {
-            .brand-title { font-size: 1.5rem; }
-            .glass-card { padding: 30px 20px; }
-            .status-icon { font-size: 3rem; }
+            .brand-title {
+                font-size: 1.5rem;
+            }
+
+            .glass-card {
+                padding: 30px 20px;
+            }
+
+            .status-icon {
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="glass-card">
@@ -250,7 +304,7 @@
 
             const loader = document.getElementById('loader');
             const content = document.getElementById('content');
-            
+
             // Small delay for smooth animation
             await new Promise(r => setTimeout(r, 400));
 
@@ -283,14 +337,54 @@
                     return;
                 }
 
-                // Robust parsing for created (could be seconds or milliseconds or string)
-                let created = Number(data.created) || Number(data.created?.integerValue) || 0;
                 const now = Math.floor(Date.now() / 1000);
-                // If created is in milliseconds, convert to seconds
-                if (created > now * 10) created = Math.floor(created / 1000);
-
                 const expires = Number(data.expires_seconds) || Number(data.expires_seconds?.integerValue) || 3600;
-                const timeLeft = (created + expires) - now;
+
+                // ===== LOGIC MỚI: KIỂM TRA ACTIVATED_AT =====
+                let activatedAt = null;
+                if (data.activated_at && data.activated_at !== null && !data.activated_at.nullValue) {
+                    // Đã kích hoạt trước đó
+                    activatedAt = Number(data.activated_at) || Number(data.activated_at?.integerValue) || 0;
+                    if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
+                }
+
+                console.log('activated_at:', activatedAt, 'expires:', expires, 'now:', now);
+
+                // TRƯỜNG HỢP 1: Key chưa kích hoạt (activated_at = null)
+                if (!activatedAt) {
+                    renderResult('valid', 'ĐANG KÍCH HOẠT', 'Key chưa được sử dụng, đang kích hoạt lần đầu...');
+
+                    // Kích hoạt key - set activated_at = now
+                    const activateRes = await activateKeyAtomic(keyId);
+                    if (activateRes.ok) {
+                        const timeLeft = expires; // Vì vừa kích hoạt nên còn đầy đủ thời gian
+                        renderResult('valid', 'KÍCH HOẠT THÀNH CÔNG', 'Key đã được kích hoạt! Thời gian bắt đầu tính từ bây giờ.');
+                        document.getElementById('key-area').style.display = 'block';
+                        document.getElementById('key-text').innerText = keyId;
+                        let mins = Math.ceil(timeLeft / 60);
+                        document.getElementById('timer-text').innerText = `Còn lại: ${mins} phút`;
+                        return;
+                    } else {
+                        const errMsg = activateRes.error?.message || String(activateRes.error);
+                        if (errMsg.includes('ALREADY_ACTIVATED')) {
+                            // Ai đó đã kích hoạt trước, reload để lấy thời gian mới
+                            renderResult('error', 'ĐÃ ĐƯỢC KÍCH HOẠT', 'Người khác vừa kích hoạt key này. Đang tải lại...');
+                            setTimeout(() => location.reload(), 1500);
+                            return;
+                        }
+                        renderResult('error', 'LỖI KÍCH HOẠT', 'Không thể kích hoạt key. Vui lòng thử lại.');
+                        return;
+                    }
+                }
+
+                // TRƯỜNG HỢP 2: Key đã được kích hoạt - tính thời gian từ activated_at
+                const timeLeft = (activatedAt + expires) - now;
+                console.log('timeLeft:', timeLeft, '(activatedAt + expires - now)');
+
+                if (timeLeft <= 0) {
+                    renderResult('expired', 'KEY HẾT HẠN', 'Key này đã quá thời gian sử dụng (đã được kích hoạt trước đó).');
+                    return;
+                }
 
                 // Check last_used cooldown to prevent spam
                 const lastUsedRaw = data.last_used || data.lastUsed || data.last_used?.integerValue || data.lastUsed?.integerValue || 0;
@@ -298,24 +392,16 @@
                 if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
                 const remainingCooldown = COOLDOWN_SECONDS - (now - lastUsed);
 
-                console.log('created', created, 'expires', expires, 'timeLeft', timeLeft, 'lastUsed', lastUsed, 'remainingCooldown', remainingCooldown);
-
-                if (timeLeft <= 0) {
-                    renderResult('expired', 'KEY HẾT HẠN', 'Key này đã quá thời gian sử dụng.');
-                    return;
-                }
-
                 if (lastUsed && remainingCooldown > 0) {
                     renderResult('error', 'ĐÃ ĐƯỢC SỬ DỤNG GẦN ĐÂY', `Key vừa được sử dụng, vui lòng chờ ${remainingCooldown} giây trước khi thử lại.`);
                     return;
                 }
 
-                // BƯỚC 2: Cố gắng đánh dấu last_used = now một cách nguyên tử (transaction)
+                // Đánh dấu last_used = now
                 renderResult('valid', 'ĐANG XÁC THỰC', 'Đang đánh dấu key để tránh bị sử dụng cùng lúc...');
 
                 const markRes = await markKeyAsUsedAtomic(keyId);
                 if (markRes.ok) {
-                    // Thành công
                     renderResult('valid', 'KEY HỢP LỆ', 'Key đã sẵn sàng sử dụng. Hãy copy bên dưới.');
                     document.getElementById('key-area').style.display = 'block';
                     document.getElementById('key-text').innerText = keyId;
@@ -326,7 +412,6 @@
                     const msg = (err && err.message) ? err.message : String(err);
                     console.warn('markKeyAsUsedAtomic failed', msg);
                     if (msg.includes('ALREADY_USED')) {
-                        // nếu có dạng ALREADY_USED:XX -> hiển thị số giây còn lại
                         const parts = msg.split(':');
                         const remain = parts.length > 1 ? Number(parts[1]) : null;
                         if (remain && remain > 0) {
@@ -349,6 +434,37 @@
             }
         }
 
+        // Hàm kích hoạt key lần đầu (set activated_at = now)
+        async function activateKeyAtomic(keyId) {
+            const docRef = db.collection('keys').doc(keyId);
+            try {
+                await db.runTransaction(async (tx) => {
+                    const snap = await tx.get(docRef);
+                    if (!snap.exists) throw new Error('NOT_FOUND');
+                    const d = snap.data() || {};
+
+                    // Kiểm tra đã kích hoạt chưa
+                    if (d.activated_at && d.activated_at !== null && !d.activated_at.nullValue) {
+                        throw new Error('ALREADY_ACTIVATED');
+                    }
+
+                    // Nếu key đã bị đánh dấu permanent used -> chặn
+                    if (d.used === true || d.used === 'true') throw new Error('ALREADY_USED');
+
+                    const now = Math.floor(Date.now() / 1000);
+
+                    // Set activated_at và last_used = now
+                    tx.update(docRef, {
+                        activated_at: now,
+                        last_used: now
+                    });
+                });
+                return { ok: true };
+            } catch (e) {
+                return { ok: false, error: e };
+            }
+        }
+
         async function markKeyAsUsedAtomic(keyId) {
             const docRef = db.collection('keys').doc(keyId);
             try {
@@ -362,12 +478,18 @@
 
                     const now = Math.floor(Date.now() / 1000);
 
-                    // Kiểm tra expiry
-                    const created = Number(d.created) || Number(d.created?.integerValue) || 0;
-                    let createdSec = created;
-                    if (createdSec > now * 10) createdSec = Math.floor(createdSec / 1000);
+                    // Kiểm tra expiry dựa trên activated_at (logic mới)
+                    let activatedAt = null;
+                    if (d.activated_at && d.activated_at !== null && !d.activated_at.nullValue) {
+                        activatedAt = Number(d.activated_at) || Number(d.activated_at?.integerValue) || 0;
+                        if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
+                    }
+
+                    // Nếu chưa kích hoạt thì chưa thể mark used (phải kích hoạt trước)
+                    if (!activatedAt) throw new Error('NOT_ACTIVATED');
+
                     const expires = Number(d.expires_seconds) || Number(d.expires_seconds?.integerValue) || 3600;
-                    if (createdSec + expires <= now) throw new Error('EXPIRED');
+                    if (activatedAt + expires <= now) throw new Error('EXPIRED');
 
                     // Kiểm tra cooldown last_used
                     let lastUsed = Number(d.last_used) || Number(d.lastUsed) || Number(d.last_used?.integerValue) || Number(d.lastUsed?.integerValue) || 0;
@@ -395,6 +517,8 @@
                     return;
                 }
 
+                const now = Math.floor(Date.now() / 1000);
+
                 // Chọn ngẫu nhiên và thử từng document nếu cần
                 const order = docs.map((_, i) => i);
                 while (order.length) {
@@ -406,15 +530,23 @@
                     // Lấy link ưu tiên steplink1
                     const link = data.steplink1 || data.short_link || data.shortlink || null;
 
-                    // Kiểm tra hạn
-                    let created = Number(data.created) || Number(data.created?.integerValue) || 0;
-                    const now = Math.floor(Date.now() / 1000);
-                    if (created > now * 10) created = Math.floor(created / 1000);
                     const expires = Number(data.expires_seconds) || Number(data.expires_seconds?.integerValue) || 3600;
-                    if ((created + expires) <= now) {
-                        console.warn('Found expired key, skipping', id);
-                        continue;
+
+                    // ===== LOGIC MỚI: KIỂM TRA ACTIVATED_AT =====
+                    let activatedAt = null;
+                    if (data.activated_at && data.activated_at !== null && !data.activated_at.nullValue) {
+                        activatedAt = Number(data.activated_at) || Number(data.activated_at?.integerValue) || 0;
+                        if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
                     }
+
+                    // Nếu key đã được kích hoạt trước đó, kiểm tra hạn
+                    if (activatedAt) {
+                        if ((activatedAt + expires) <= now) {
+                            console.warn('Found expired key (activated), skipping', id);
+                            continue;
+                        }
+                    }
+                    // Nếu key chưa kích hoạt (activated_at = null), nó vẫn còn hợp lệ!
 
                     // Kiểm tra cooldown last_used
                     let lastUsed = Number(data.last_used) || Number(data.lastUsed) || Number(data.last_used?.integerValue) || Number(data.lastUsed?.integerValue) || 0;
@@ -430,20 +562,34 @@
                         continue;
                     }
 
-                    // Thử đánh dấu atomic (ghi last_used)
+                    // Nếu key chưa kích hoạt, kích hoạt trước
+                    if (!activatedAt) {
+                        const activateRes = await activateKeyAtomic(id);
+                        if (activateRes.ok) {
+                            renderResult('valid', 'LẤY KEY THÀNH CÔNG', 'Đã kích hoạt key mới, đang chuyển hướng...');
+                            document.getElementById('key-area').style.display = 'block';
+                            document.getElementById('key-text').innerText = link;
+                            document.getElementById('timer-text').innerText = `Còn lại: ${Math.ceil(expires / 60)} phút`;
+                            window.open(link, '_blank');
+                            return;
+                        } else {
+                            console.warn('Activate failed for', id, activateRes.error);
+                            continue;
+                        }
+                    }
+
+                    // Key đã được kích hoạt, thử đánh dấu last_used
                     const mark = await markKeyAsUsedAtomic(id);
                     if (mark.ok) {
-                        // Hiển thị và mở link
+                        const timeLeft = (activatedAt + expires) - now;
                         renderResult('valid', 'LẤY KEY THÀNH CÔNG', 'Đã tìm được key, đang chuyển hướng...');
                         document.getElementById('key-area').style.display = 'block';
                         document.getElementById('key-text').innerText = link;
-                        document.getElementById('timer-text').innerText = '';
-                        // Mở link trong tab mới
+                        document.getElementById('timer-text').innerText = `Còn lại: ${Math.ceil(timeLeft / 60)} phút`;
                         window.open(link, '_blank');
                         return;
                     } else {
                         console.warn('Mark failed for', id, mark.error);
-                        // nếu lỗi là ALREADY_USED hoặc EXPIRED, thử key khác
                         continue;
                     }
                 }
@@ -459,7 +605,7 @@
             document.getElementById('loader').style.display = 'none';
             const content = document.getElementById('content');
             content.style.display = 'block';
-            
+
             // Trigger animation
             content.style.animation = "popIn 0.5s ease";
 
@@ -489,7 +635,7 @@
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-check"></i> COPIED';
                 btn.style.background = 'linear-gradient(90deg, #00b09b, #96c93d)';
-                
+
                 setTimeout(() => {
                     btn.innerHTML = originalText;
                     btn.style.background = '';
@@ -497,7 +643,7 @@
             });
         }
 
-        window.onload = function() {
+        window.onload = function () {
             const params = new URLSearchParams(window.location.search);
             const keyParam = params.get('key') || params.get('keys') || params.get('k');
             if (keyParam) {
@@ -508,4 +654,5 @@
         };
     </script>
 </body>
+
 </html>
