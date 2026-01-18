@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HONGHAC. BUILDA - Key Verification</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden; /* Tránh thanh cuộn thừa */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Hình nền động */
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #141E30);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- CARD CONTAINER (GLASSMORPHISM) --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- BRAND TITLE EFFECT --- */
+        .brand-title {
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            /* Hiệu ứng Gradient Text */
+            background: linear-gradient(to right, #00c6ff, #0072ff, #00c6ff);
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            position: relative;
+        }
+        
+        /* Hiệu ứng bóng sáng dưới chữ */
+        .brand-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: #0072ff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #0072ff;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* --- STATUS ICONS & TEXT --- */
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .result-msg {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Màu trạng thái */
+        .valid { color: #00ff88; text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+        .expired { color: #ff4b2b; text-shadow: 0 0 15px rgba(255, 75, 43, 0.4); }
+        .error { color: #ffcc00; }
+
+        /* --- KEY BOX --- */
+        .key-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .key-text {
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            color: #fff;
+            letter-spacing: 1px;
+            word-break: break-all;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .copy-btn {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+        }
+
+        .copy-btn:active { transform: scale(0.95); }
+        .copy-btn:hover { box-shadow: 0 0 15px rgba(0, 198, 255, 0.6); }
+
+        /* --- TIMER --- */
+        .timer-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #a8c0ff;
+            margin-top: 10px;
+        }
+
+        /* --- LOADER --- */
+        .loader-ring {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+        }
+        .loader-ring:after {
+            content: " ";
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            border-color: #fff transparent #fff transparent;
+            animation: ring 1.2s linear infinite;
+        }
+        @keyframes ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 480px) {
+            .brand-title { font-size: 1.5rem; }
+            .glass-card { padding: 30px 20px; }
+            .status-icon { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card">
+        <div class="brand-title">HONGHAC. BUILDA</div>
+
+        <div id="loader">
+            <div class="loader-ring"></div>
+            <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">Đang xác thực dữ liệu...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <div id="icon-area"></div>
+            <div class="result-title" id="status-title">Kết quả</div>
+            <p class="result-msg" id="status-msg">...</p>
+
+            <div id="key-area" style="display: none;">
+                <div class="key-box">
+                    <span class="key-text" id="key-text">LOADING...</span>
+                    <button class="copy-btn" onclick="copyKey()">
+                        <i class="fas fa-copy"></i> COPY
+                    </button>
+                </div>
+                <div class="timer-badge">
+                    <i class="far fa-clock"></i> <span id="timer-text">--:--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // --- 1. CONFIG FIREBASE ---
+        const firebaseConfig = {
+            projectId: 'honghac-builda-keys',
+            apiKey: 'AIzaSyCsR_yDVQGgeqJAp5NvLWeLkPgz0scN-Xw',
+            databaseURL: 'https://honghac-builda-keys-default-rtdb.asia-southeast1.firebasedatabase.app'
+        };
+
+        // COOLDOWN: giới hạn 1 lần / COOLDOWN_SECONDS cho mỗi key (mặc định 60s)
+        const COOLDOWN_SECONDS = 60;
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // --- 2. LOGIC ---
+        async function checkKey() {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Accept both ?key= and ?keys= (and ?k=)
+            let keyId = urlParams.get('key') || urlParams.get('keys') || urlParams.get('k');
+            if (typeof keyId === 'string') keyId = keyId.trim();
+
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
+            
+            // Small delay for smooth animation
+            await new Promise(r => setTimeout(r, 400));
+
+            if (!keyId) {
+                console.warn('No key param found in URL. Try using ?key=YOUR_KEY');
+                renderResult('error', 'THIẾU KEY', 'Không tìm thấy mã Key trên URL. Vui lòng kiểm tra ?key=KEY_ID');
+                return;
+            }
+
+            console.log('Checking key:', keyId);
+
+            try {
+                const docRef = db.collection("keys").doc(keyId);
+                const docSnap = await docRef.get();
+
+                if (!docSnap.exists) {
+                    console.warn('Document not found for', keyId);
+                    renderResult('error', 'KEY KHÔNG TỒN TẠI', 'Key không đúng hoặc đã bị xóa khỏi hệ thống.');
+                    return;
+                }
+
+                const data = docSnap.data() || {};
+                console.log('Document data:', data);
+
+                // Robust parsing for 'used' (handle boolean or string) - permanent used flag
+                const usedRaw = data.used;
+                const used = (usedRaw === true) || (usedRaw === 'true') || (usedRaw === '1') || (usedRaw === 1);
+                if (used) {
+                    renderResult('error', 'KEY ĐÃ ĐƯỢC SỬ DỤNG', 'Key này đã bị đánh dấu là đã dùng (không còn hiệu lực).');
+                    return;
+                }
+
+                // Robust parsing for created (could be seconds or milliseconds or string)
+                let created = Number(data.created) || Number(data.created?.integerValue) || 0;
+                const now = Math.floor(Date.now() / 1000);
+                // If created is in milliseconds, convert to seconds
+                if (created > now * 10) created = Math.floor(created / 1000);
+
+                const expires = Number(data.expires_seconds) || Number(data.expires_seconds?.integerValue) || 3600;
+                const timeLeft = (created + expires) - now;
+
+                // Check last_used cooldown to prevent spam
+                const lastUsedRaw = data.last_used || data.lastUsed || data.last_used?.integerValue || data.lastUsed?.integerValue || 0;
+                let lastUsed = Number(lastUsedRaw) || 0;
+                if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
+                const remainingCooldown = COOLDOWN_SECONDS - (now - lastUsed);
+
+                console.log('created', created, 'expires', expires, 'timeLeft', timeLeft, 'lastUsed', lastUsed, 'remainingCooldown', remainingCooldown);
+
+                if (timeLeft <= 0) {
+                    renderResult('expired', 'KEY HẾT HẠN', 'Key này đã quá thời gian sử dụng.');
+                    return;
+                }
+
+                if (lastUsed && remainingCooldown > 0) {
+                    renderResult('error', 'ĐÃ ĐƯỢC SỬ DỤNG GẦN ĐÂY', `Key vừa được sử dụng, vui lòng chờ ${remainingCooldown} giây trước khi thử lại.`);
+                    return;
+                }
+
+                // BƯỚC 2: Cố gắng đánh dấu last_used = now một cách nguyên tử (transaction)
+                renderResult('valid', 'ĐANG XÁC THỰC', 'Đang đánh dấu key để tránh bị sử dụng cùng lúc...');
+
+                const markRes = await markKeyAsUsedAtomic(keyId);
+                if (markRes.ok) {
+                    // Thành công
+                    renderResult('valid', 'KEY HỢP LỆ', 'Key đã sẵn sàng sử dụng. Hãy copy bên dưới.');
+                    document.getElementById('key-area').style.display = 'block';
+                    document.getElementById('key-text').innerText = keyId;
+                    let mins = Math.ceil(timeLeft / 60);
+                    document.getElementById('timer-text').innerText = `Còn lại: ${mins} phút`;
+                } else {
+                    const err = markRes.error;
+                    const msg = (err && err.message) ? err.message : String(err);
+                    console.warn('markKeyAsUsedAtomic failed', msg);
+                    if (msg.includes('ALREADY_USED')) {
+                        // nếu có dạng ALREADY_USED:XX -> hiển thị số giây còn lại
+                        const parts = msg.split(':');
+                        const remain = parts.length > 1 ? Number(parts[1]) : null;
+                        if (remain && remain > 0) {
+                            renderResult('error', 'ĐÃ ĐƯỢC SỬ DỤNG GẦN ĐÂY', `Key vừa được sử dụng, vui lòng chờ ${remain} giây trước khi thử lại.`);
+                        } else {
+                            renderResult('error', 'KEY ĐÃ ĐƯỢC SỬ DỤNG', 'Người khác vừa sử dụng key này trước bạn.');
+                        }
+                    } else if (msg.includes('EXPIRED')) {
+                        renderResult('expired', 'KEY HẾT HẠN', 'Key đã hết hạn trước khi bạn xác thực.');
+                    } else if (msg.includes('NOT_FOUND')) {
+                        renderResult('error', 'KEY KHÔNG TỒN TẠI', 'Key không tồn tại trên hệ thống.');
+                    } else {
+                        renderResult('error', 'LỖI KẾT NỐI', 'Không thể cập nhật trạng thái key. Vui lòng thử lại.');
+                    }
+                }
+
+            } catch (error) {
+                console.error(error);
+                renderResult('error', 'LỖI KẾT NỐI', 'Không thể kết nối đến máy chủ.');
+            }
+        }
+
+        async function markKeyAsUsedAtomic(keyId) {
+            const docRef = db.collection('keys').doc(keyId);
+            try {
+                await db.runTransaction(async (tx) => {
+                    const snap = await tx.get(docRef);
+                    if (!snap.exists) throw new Error('NOT_FOUND');
+                    const d = snap.data() || {};
+
+                    // Nếu key đã bị đánh dấu permanent used -> chặn
+                    if (d.used === true || d.used === 'true') throw new Error('ALREADY_USED');
+
+                    const now = Math.floor(Date.now() / 1000);
+
+                    // Kiểm tra expiry
+                    const created = Number(d.created) || Number(d.created?.integerValue) || 0;
+                    let createdSec = created;
+                    if (createdSec > now * 10) createdSec = Math.floor(createdSec / 1000);
+                    const expires = Number(d.expires_seconds) || Number(d.expires_seconds?.integerValue) || 3600;
+                    if (createdSec + expires <= now) throw new Error('EXPIRED');
+
+                    // Kiểm tra cooldown last_used
+                    let lastUsed = Number(d.last_used) || Number(d.lastUsed) || Number(d.last_used?.integerValue) || Number(d.lastUsed?.integerValue) || 0;
+                    if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
+                    const remaining = COOLDOWN_SECONDS - (now - lastUsed);
+                    if (lastUsed && remaining > 0) throw new Error('ALREADY_USED:' + remaining);
+
+                    // Cập nhật last_used = now (không đánh dấu permanent used)
+                    tx.update(docRef, { last_used: now });
+                });
+                return { ok: true };
+            } catch (e) {
+                return { ok: false, error: e };
+            }
+        }
+
+        async function autoGetKey() {
+            // Tự động tìm key chưa dùng và trả về steplink1 (ưu tiên) hoặc short_link
+            renderResult('valid', 'ĐANG TÌM KEY', 'Đang tìm key chưa dùng...');
+            try {
+                const q = await db.collection('keys').where('used', '==', false).limit(50).get();
+                const docs = (q && q.docs) ? q.docs.slice() : [];
+                if (!docs.length) {
+                    renderResult('error', 'HẾT KEY', 'Hiện tại kho key trống. Vui lòng thử lại sau.');
+                    return;
+                }
+
+                // Chọn ngẫu nhiên và thử từng document nếu cần
+                const order = docs.map((_, i) => i);
+                while (order.length) {
+                    const idx = Math.floor(Math.random() * order.length);
+                    const doc = docs[order.splice(idx, 1)[0]];
+                    const id = doc.id;
+                    const data = doc.data() || {};
+
+                    // Lấy link ưu tiên steplink1
+                    const link = data.steplink1 || data.short_link || data.shortlink || null;
+
+                    // Kiểm tra hạn
+                    let created = Number(data.created) || Number(data.created?.integerValue) || 0;
+                    const now = Math.floor(Date.now() / 1000);
+                    if (created > now * 10) created = Math.floor(created / 1000);
+                    const expires = Number(data.expires_seconds) || Number(data.expires_seconds?.integerValue) || 3600;
+                    if ((created + expires) <= now) {
+                        console.warn('Found expired key, skipping', id);
+                        continue;
+                    }
+
+                    // Kiểm tra cooldown last_used
+                    let lastUsed = Number(data.last_used) || Number(data.lastUsed) || Number(data.last_used?.integerValue) || Number(data.lastUsed?.integerValue) || 0;
+                    if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
+                    const remaining = COOLDOWN_SECONDS - (now - lastUsed);
+                    if (lastUsed && remaining > 0) {
+                        console.warn('Found recently used key, skipping', id, 'remaining', remaining);
+                        continue;
+                    }
+
+                    if (!link) {
+                        console.warn('Found key without link, skipping', id);
+                        continue;
+                    }
+
+                    // Thử đánh dấu atomic (ghi last_used)
+                    const mark = await markKeyAsUsedAtomic(id);
+                    if (mark.ok) {
+                        // Hiển thị và mở link
+                        renderResult('valid', 'LẤY KEY THÀNH CÔNG', 'Đã tìm được key, đang chuyển hướng...');
+                        document.getElementById('key-area').style.display = 'block';
+                        document.getElementById('key-text').innerText = link;
+                        document.getElementById('timer-text').innerText = '';
+                        // Mở link trong tab mới
+                        window.open(link, '_blank');
+                        return;
+                    } else {
+                        console.warn('Mark failed for', id, mark.error);
+                        // nếu lỗi là ALREADY_USED hoặc EXPIRED, thử key khác
+                        continue;
+                    }
+                }
+
+                renderResult('error', 'HẾT KEY', 'Không tìm thấy key hợp lệ.');
+            } catch (e) {
+                console.error(e);
+                renderResult('error', 'LỖI KẾT NỐI', 'Không thể lấy key.');
+            }
+        }
+
+        function renderResult(type, title, msg) {
+            document.getElementById('loader').style.display = 'none';
+            const content = document.getElementById('content');
+            content.style.display = 'block';
+            
+            // Trigger animation
+            content.style.animation = "popIn 0.5s ease";
+
+            const iconDiv = document.getElementById('icon-area');
+            const titleDiv = document.getElementById('status-title');
+            const msgDiv = document.getElementById('status-msg');
+
+            titleDiv.innerText = title;
+            msgDiv.innerText = msg;
+
+            if (type === 'valid') {
+                iconDiv.innerHTML = '<i class="fas fa-check-circle status-icon valid"></i>';
+                titleDiv.style.color = '#00ff88';
+            } else if (type === 'expired') {
+                iconDiv.innerHTML = '<i class="fas fa-times-circle status-icon expired"></i>';
+                titleDiv.style.color = '#ff4b2b';
+            } else {
+                iconDiv.innerHTML = '<i class="fas fa-exclamation-triangle status-icon error"></i>';
+                titleDiv.style.color = '#ffcc00';
+            }
+        }
+
+        function copyKey() {
+            const text = document.getElementById('key-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> COPIED';
+                btn.style.background = 'linear-gradient(90deg, #00b09b, #96c93d)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const keyParam = params.get('key') || params.get('keys') || params.get('k');
+            if (keyParam) {
+                checkKey();
+            } else {
+                autoGetKey();
+            }
+        };
+    </script>
+</body>
+</html>
