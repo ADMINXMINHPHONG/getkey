@@ -10,26 +10,42 @@
 
     <style>
         /* --- RESET & BASIC SETUP --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             height: 100vh;
             overflow: hidden;
+            /* Tránh thanh cuộn thừa */
             display: flex;
             align-items: center;
             justify-content: center;
+            /* Hình nền động */
             background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #141E30);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             color: #fff;
         }
+
         @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
-        /* --- CARD CONTAINER --- */
+        /* --- CARD CONTAINER (GLASSMORPHISM) --- */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(16px);
@@ -45,18 +61,27 @@
             overflow: hidden;
             animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        /* --- BRAND TITLE --- */
+        /* --- BRAND TITLE EFFECT --- */
         .brand-title {
             font-weight: 800;
             font-size: 1.8rem;
             letter-spacing: 2px;
             margin-bottom: 25px;
             text-transform: uppercase;
+            /* Hiệu ứng Gradient Text */
             background: linear-gradient(to right, #00c6ff, #0072ff, #00c6ff);
             background-size: 200% auto;
             color: #fff;
@@ -66,78 +91,160 @@
             animation: shine 3s linear infinite;
             position: relative;
         }
+
+        /* Hiệu ứng bóng sáng dưới chữ */
         .brand-title::after {
-            content: ''; position: absolute; left: 50%; bottom: -10px;
-            transform: translateX(-50%); width: 50px; height: 3px;
-            background: #0072ff; border-radius: 2px; box-shadow: 0 0 10px #0072ff;
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: #0072ff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px #0072ff;
         }
-        @keyframes shine { to { background-position: 200% center; } }
 
-        /* --- CONTENT STYLES --- */
-        .status-icon { font-size: 4rem; margin-bottom: 15px; transition: all 0.3s ease; }
-        .result-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 10px; }
-        .result-msg { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 25px; line-height: 1.5; }
-        .valid { color: #00ff88; text-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
-        .expired { color: #ff4b2b; text-shadow: 0 0 15px rgba(255, 75, 43, 0.4); }
-        .error { color: #ffcc00; }
-
-        /* --- BUTTONS --- */
-        .action-btn {
-            background: linear-gradient(90deg, #00c6ff, #0072ff);
-            border: none; color: white; padding: 12px 30px;
-            border-radius: 30px; cursor: pointer; font-weight: 700;
-            font-size: 1rem; margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
         }
-        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 198, 255, 0.6); }
-        .action-btn:active { transform: scale(0.95); }
-        .action-btn:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; opacity: 0.7; }
+
+        /* --- STATUS ICONS & TEXT --- */
+        .status-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .result-msg {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* Màu trạng thái */
+        .valid {
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .expired {
+            color: #ff4b2b;
+            text-shadow: 0 0 15px rgba(255, 75, 43, 0.4);
+        }
+
+        .error {
+            color: #ffcc00;
+        }
 
         /* --- KEY BOX --- */
         .key-box {
             background: rgba(0, 0, 0, 0.3);
             border: 1px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 10px; padding: 15px; margin-bottom: 20px;
-            position: relative; display: flex; align-items: center; justify-content: space-between;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .key-text {
-            font-family: 'Consolas', monospace; font-size: 1.1rem; color: #fff;
-            letter-spacing: 1px; word-break: break-all; text-align: left; flex-grow: 1;
-        }
-        .copy-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer;
-            font-weight: 600; font-size: 0.75rem; margin-left: 10px; transition: all 0.2s;
-        }
-        .copy-btn:hover { background: rgba(255,255,255,0.2); }
 
-        /* --- LOADER & STEPS --- */
-        .loader-ring {
-            display: inline-block; width: 50px; height: 50px;
+        .key-text {
+            font-family: 'Consolas', monospace;
+            font-size: 1.1rem;
+            color: #fff;
+            letter-spacing: 1px;
+            word-break: break-all;
+            text-align: left;
+            flex-grow: 1;
         }
+
+        .copy-btn {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .copy-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 198, 255, 0.6);
+        }
+
+        /* --- TIMER --- */
+        .timer-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #a8c0ff;
+            margin-top: 10px;
+        }
+
+        /* --- LOADER --- */
+        .loader-ring {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+        }
+
         .loader-ring:after {
-            content: " "; display: block; width: 40px; height: 40px; margin: 5px;
-            border-radius: 50%; border: 4px solid #fff;
+            content: " ";
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            border-radius: 50%;
+            border: 4px solid #fff;
             border-color: #fff transparent #fff transparent;
             animation: ring 1.2s linear infinite;
         }
-        @keyframes ring { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .timer-badge {
-            display: inline-block; background: rgba(255, 255, 255, 0.1);
-            padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; color: #a8c0ff; margin-top: 10px;
+        @keyframes ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
-        .step-progress {
-            margin-top: 15px; font-size: 0.85rem; color: #aaa; font-style: italic;
-        }
-
-        /* MOBILE */
+        /* --- MOBILE ADJUSTMENTS --- */
         @media (max-width: 480px) {
-            .brand-title { font-size: 1.5rem; }
-            .glass-card { padding: 30px 20px; }
+            .brand-title {
+                font-size: 1.5rem;
+            }
+
+            .glass-card {
+                padding: 30px 20px;
+            }
+
+            .status-icon {
+                font-size: 3rem;
+            }
         }
     </style>
 </head>
@@ -147,21 +254,9 @@
     <div class="glass-card">
         <div class="brand-title">HONGHAC. BUILDA</div>
 
-        <div id="start-screen">
-            <div style="margin-bottom: 20px;">
-                <i class="fas fa-shield-alt" style="font-size: 3.5rem; color: #00c6ff; margin-bottom: 15px;"></i>
-                <p class="result-msg" style="margin-bottom: 10px;">Hệ thống xác thực Key tự động</p>
-                <p style="font-size: 0.8rem; color: #888;">Nhấn nút bên dưới để bắt đầu lấy Key.</p>
-            </div>
-            <button id="btn-get-key" class="action-btn" onclick="startProcess()">
-                <i class="fas fa-key"></i> LẤY KEY NGAY
-            </button>
-        </div>
-
-        <div id="loader" style="display: none;">
+        <div id="loader">
             <div class="loader-ring"></div>
-            <p id="loader-text" style="margin-top: 15px; font-size: 0.95rem; font-weight: 600;">Đang khởi tạo...</p>
-            <div class="step-progress" id="step-text">Bước 1/3: Kiểm tra trình duyệt...</div>
+            <p style="margin-top: 15px; font-size: 0.9rem; opacity: 0.8;">Đang xác thực dữ liệu...</p>
         </div>
 
         <div id="content" style="display: none;">
@@ -172,15 +267,12 @@
             <div id="key-area" style="display: none;">
                 <div class="key-box">
                     <span class="key-text" id="key-text">LOADING...</span>
-                    <button class="copy-btn" onclick="copyKey()">COPY</button>
+                    <button class="copy-btn" onclick="copyKey()">
+                        <i class="fas fa-copy"></i> COPY
+                    </button>
                 </div>
                 <div class="timer-badge">
                     <i class="far fa-clock"></i> <span id="timer-text">--:--</span>
-                </div>
-                <div style="margin-top: 20px;">
-                     <a href="javascript:location.reload()" style="color: #00c6ff; text-decoration: none; font-size: 0.8rem;">
-                        <i class="fas fa-sync"></i> Làm mới trang
-                     </a>
                 </div>
             </div>
         </div>
@@ -189,7 +281,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<script>
+    <script>
         // --- 1. CONFIG FIREBASE ---
         const firebaseConfig = {
             projectId: 'honghac-builda-keys',
@@ -197,200 +289,180 @@
             databaseURL: 'https://honghac-builda-keys-default-rtdb.asia-southeast1.firebasedatabase.app'
         };
 
-        const COOLDOWN_SECONDS = 60; 
-        
-        // --- QUAN TRỌNG: Tăng lên 500 để quét sâu qua các key đã hết hạn ---
-        // Với tốc độ 120 key/h, 500 key sẽ quét được khoảng 4 tiếng dữ liệu gần nhất.
-        const SEARCH_LIMIT = 500;    
+        // COOLDOWN: giới hạn 1 lần / COOLDOWN_SECONDS cho mỗi key (mặc định 60s)
+        const COOLDOWN_SECONDS = 60;
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // --- 2. LOGIC START PROCESS (GIỮ NGUYÊN) ---
-        async function startProcess() {
-            const btn = document.getElementById('btn-get-key');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> ĐANG TÌM...';
-
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-
-            const stepText = document.getElementById('step-text');
-            const loadText = document.getElementById('loader-text');
-
-            // Giữ hiệu ứng chờ 3 bước để chặn spam
-            loadText.innerText = "Đang kết nối kho dữ liệu...";
-            stepText.innerText = "Bước 1/3: Xác thực người dùng...";
-            await new Promise(r => setTimeout(r, 1000));
-
-            loadText.innerText = "Đang lọc key rác...";
-            stepText.innerText = "Bước 2/3: Đang tìm key còn hạn...";
-            await new Promise(r => setTimeout(r, 1500));
-
-            loadText.innerText = "Đang lấy dữ liệu...";
-            stepText.innerText = "Bước 3/3: Hoàn tất...";
-            
-            autoGetKey(); // Gọi hàm lấy key
-        }
-
-        // --- 3. LOGIC CHECK KEY (GIỮ NGUYÊN) ---
+        // --- 2. LOGIC ---
         async function checkKey() {
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
-            document.getElementById('loader-text').innerText = "Đang kiểm tra Key...";
-            document.getElementById('step-text').style.display = 'none';
-
             const urlParams = new URLSearchParams(window.location.search);
+            // Accept both ?key= and ?keys= (and ?k=)
             let keyId = urlParams.get('key') || urlParams.get('keys') || urlParams.get('k');
             if (typeof keyId === 'string') keyId = keyId.trim();
 
-            await new Promise(r => setTimeout(r, 500));
+            const loader = document.getElementById('loader');
+            const content = document.getElementById('content');
+
+            // Small delay for smooth animation
+            await new Promise(r => setTimeout(r, 400));
 
             if (!keyId) {
-                renderResult('error', 'LỖI', 'Vui lòng nhấn nút Lấy Key.');
+                console.warn('No key param found in URL. Try using ?key=YOUR_KEY');
+                renderResult('error', 'THIẾU KEY', 'Không tìm thấy mã Key trên URL. Vui lòng kiểm tra ?key=KEY_ID');
                 return;
             }
+
+            console.log('Checking key:', keyId);
 
             try {
                 const docRef = db.collection("keys").doc(keyId);
                 const docSnap = await docRef.get();
 
-                if (!docSnap.exists) { renderResult('error', 'KHÔNG TỒN TẠI', 'Key không đúng.'); return; }
+                if (!docSnap.exists) {
+                    console.warn('Document not found for', keyId);
+                    renderResult('error', 'KEY KHÔNG TỒN TẠI', 'Key không đúng hoặc đã bị xóa khỏi hệ thống.');
+                    return;
+                }
+
                 const data = docSnap.data() || {};
-                
-                if (data.used === true) { renderResult('error', 'ĐÃ SỬ DỤNG', 'Key đã bị hủy.'); return; }
+                console.log('Document data:', data);
 
-                const now = Math.floor(Date.now() / 1000);
-                const expires = Number(data.expires_seconds) || 3600;
-
-                let activatedAt = Number(data.activated_at) || 0;
-                if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
-
-                if (!activatedAt) {
-                    renderResult('valid', 'ĐANG KÍCH HOẠT', 'Đang kích hoạt key...');
-                    const res = await activateKeyAtomic(keyId);
-                    if (res.ok) showSuccess(keyId, expires);
-                    else setTimeout(() => location.reload(), 1000);
-                    return;
-                }
-
-                const timeLeft = (activatedAt + expires) - now;
-                if (timeLeft <= 0) { renderResult('expired', 'HẾT HẠN', 'Key này đã hết hạn.'); return; }
-
-                // Check cooldown last_used
-                let lastUsed = Number(data.last_used) || 0;
-                if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
-                if (lastUsed && (now - lastUsed < COOLDOWN_SECONDS)) {
-                    renderResult('error', 'CHỜ CHÚT', `Vui lòng đợi ${COOLDOWN_SECONDS - (now - lastUsed)}s.`);
-                    return;
-                }
-
-                const mark = await markKeyAsUsedAtomic(keyId);
-                if (mark.ok) showSuccess(keyId, timeLeft);
-                else renderResult('error', 'LỖI', 'Key đang bận hoặc lỗi mạng.');
-
-            } catch (error) { renderResult('error', 'LỖI MẠNG', 'Kiểm tra kết nối.'); }
-        }
-
-        // --- 4. LOGIC AUTO GET KEY (ĐÃ TỐI ƯU CHO SỐ LƯỢNG LỚN) ---
-        async function autoGetKey() {
-            try {
-                // Tăng limit để quét sâu hơn
-                const q = await db.collection('keys')
-                            .where('used', '==', false)
-                            .limit(SEARCH_LIMIT) 
-                            .get();
-                            
-                const docs = (q && q.docs) ? q.docs.slice() : [];
-                
-                if (!docs.length) {
-                    renderResult('error', 'HẾT KEY', 'Kho đang trống, admin chưa nạp key.');
+                // Robust parsing for 'used' (handle boolean or string) - permanent used flag
+                const usedRaw = data.used;
+                const used = (usedRaw === true) || (usedRaw === 'true') || (usedRaw === '1') || (usedRaw === 1);
+                if (used) {
+                    renderResult('error', 'KEY ĐÃ ĐƯỢC SỬ DỤNG', 'Key này đã bị đánh dấu là đã dùng (không còn hiệu lực).');
                     return;
                 }
 
                 const now = Math.floor(Date.now() / 1000);
-                
-                // Xáo trộn danh sách để user không tranh nhau cùng 1 key đầu tiên
-                // Điều này cực quan trọng khi nhiều người bấm cùng lúc
-                const order = docs.map((_, i) => i).sort(() => Math.random() - 0.5);
+                const expires = Number(data.expires_seconds) || Number(data.expires_seconds?.integerValue) || 3600;
 
-                for (let idx of order) {
-                    const doc = docs[idx];
-                    const id = doc.id;
-                    const data = doc.data() || {};
-                    const link = data.steplink1 || data.short_link || data.shortlink; // Ưu tiên steplink1
-                    
-                    if (!link) continue;
-
-                    const expires = Number(data.expires_seconds) || 3600; 
-                    let activatedAt = Number(data.activated_at) || 0;
+                // ===== LOGIC MỚI: KIỂM TRA ACTIVATED_AT =====
+                let activatedAt = null;
+                if (data.activated_at && data.activated_at !== null && !data.activated_at.nullValue) {
+                    // Đã kích hoạt trước đó
+                    activatedAt = Number(data.activated_at) || Number(data.activated_at?.integerValue) || 0;
                     if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
+                }
 
-                    // --- BỘ LỌC THÔNG MINH ---
-                    // 1. Nếu đã kích hoạt và hết hạn -> Bỏ qua ngay (Không báo lỗi)
-                    if (activatedAt && (activatedAt + expires <= now)) continue;
+                console.log('activated_at:', activatedAt, 'expires:', expires, 'now:', now);
 
-                    // 2. Nếu vừa có người dùng xong (Cooldown) -> Bỏ qua
-                    let lastUsed = Number(data.last_used) || 0;
-                    if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
-                    if (lastUsed && (now - lastUsed < COOLDOWN_SECONDS)) continue;
+                // TRƯỜNG HỢP 1: Key chưa kích hoạt (activated_at = null)
+                if (!activatedAt) {
+                    renderResult('valid', 'ĐANG KÍCH HOẠT', 'Key chưa được sử dụng, đang kích hoạt lần đầu...');
 
-                    // --- TÌM THẤY KEY NGON ---
-                    if (!activatedAt) {
-                        // Key chưa kích hoạt -> Ăn ngay
-                        const res = await activateKeyAtomic(id);
-                        if (res.ok) { redirectToKey(link, expires); return; }
+                    // Kích hoạt key - set activated_at = now
+                    const activateRes = await activateKeyAtomic(keyId);
+                    if (activateRes.ok) {
+                        const timeLeft = expires; // Vì vừa kích hoạt nên còn đầy đủ thời gian
+                        renderResult('valid', 'KÍCH HOẠT THÀNH CÔNG', 'Key đã được kích hoạt! Thời gian bắt đầu tính từ bây giờ.');
+                        document.getElementById('key-area').style.display = 'block';
+                        document.getElementById('key-text').innerText = keyId;
+                        let mins = Math.ceil(timeLeft / 60);
+                        document.getElementById('timer-text').innerText = `Còn lại: ${mins} phút`;
+                        return;
                     } else {
-                        // Key cũ còn hạn -> Dùng tiếp
-                        const mark = await markKeyAsUsedAtomic(id);
-                        if (mark.ok) {
-                            redirectToKey(link, (activatedAt + expires) - now);
+                        const errMsg = activateRes.error?.message || String(activateRes.error);
+                        if (errMsg.includes('ALREADY_ACTIVATED')) {
+                            // Ai đó đã kích hoạt trước, reload để lấy thời gian mới
+                            renderResult('error', 'ĐÃ ĐƯỢC KÍCH HOẠT', 'Người khác vừa kích hoạt key này. Đang tải lại...');
+                            setTimeout(() => location.reload(), 1500);
                             return;
                         }
+                        renderResult('error', 'LỖI KÍCH HOẠT', 'Không thể kích hoạt key. Vui lòng thử lại.');
+                        return;
                     }
                 }
 
-                // Nếu quét hết 500 key mà vẫn không tìm được cái nào
-                renderResult('error', 'HẾT KEY', 'Đã quét 500 key nhưng đều hết hạn. Vui lòng báo Admin reset.');
+                // TRƯỜNG HỢP 2: Key đã được kích hoạt - tính thời gian từ activated_at
+                const timeLeft = (activatedAt + expires) - now;
+                console.log('timeLeft:', timeLeft, '(activatedAt + expires - now)');
 
-            } catch (e) {
-                console.error(e);
-                renderResult('error', 'LỖI SERVER', 'Không thể lấy danh sách key.');
+                if (timeLeft <= 0) {
+                    renderResult('expired', 'KEY HẾT HẠN', 'Key này đã quá thời gian sử dụng (đã được kích hoạt trước đó).');
+                    return;
+                }
+
+                // Check last_used cooldown to prevent spam
+                const lastUsedRaw = data.last_used || data.lastUsed || data.last_used?.integerValue || data.lastUsed?.integerValue || 0;
+                let lastUsed = Number(lastUsedRaw) || 0;
+                if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
+                const remainingCooldown = COOLDOWN_SECONDS - (now - lastUsed);
+
+                if (lastUsed && remainingCooldown > 0) {
+                    renderResult('error', 'ĐÃ ĐƯỢC SỬ DỤNG GẦN ĐÂY', `Key vừa được sử dụng, vui lòng chờ ${remainingCooldown} giây trước khi thử lại.`);
+                    return;
+                }
+
+                // Đánh dấu last_used = now
+                renderResult('valid', 'ĐANG XÁC THỰC', 'Đang đánh dấu key để tránh bị sử dụng cùng lúc...');
+
+                const markRes = await markKeyAsUsedAtomic(keyId);
+                if (markRes.ok) {
+                    renderResult('valid', 'KEY HỢP LỆ', 'Key đã sẵn sàng sử dụng. Hãy copy bên dưới.');
+                    document.getElementById('key-area').style.display = 'block';
+                    document.getElementById('key-text').innerText = keyId;
+                    let mins = Math.ceil(timeLeft / 60);
+                    document.getElementById('timer-text').innerText = `Còn lại: ${mins} phút`;
+                } else {
+                    const err = markRes.error;
+                    const msg = (err && err.message) ? err.message : String(err);
+                    console.warn('markKeyAsUsedAtomic failed', msg);
+                    if (msg.includes('ALREADY_USED')) {
+                        const parts = msg.split(':');
+                        const remain = parts.length > 1 ? Number(parts[1]) : null;
+                        if (remain && remain > 0) {
+                            renderResult('error', 'ĐÃ ĐƯỢC SỬ DỤNG GẦN ĐÂY', `Key vừa được sử dụng, vui lòng chờ ${remain} giây trước khi thử lại.`);
+                        } else {
+                            renderResult('error', 'KEY ĐÃ ĐƯỢC SỬ DỤNG', 'Người khác vừa sử dụng key này trước bạn.');
+                        }
+                    } else if (msg.includes('EXPIRED')) {
+                        renderResult('expired', 'KEY HẾT HẠN', 'Key đã hết hạn trước khi bạn xác thực.');
+                    } else if (msg.includes('NOT_FOUND')) {
+                        renderResult('error', 'KEY KHÔNG TỒN TẠI', 'Key không tồn tại trên hệ thống.');
+                    } else {
+                        renderResult('error', 'LỖI KẾT NỐI', 'Không thể cập nhật trạng thái key. Vui lòng thử lại.');
+                    }
+                }
+
+            } catch (error) {
+                console.error(error);
+                renderResult('error', 'LỖI KẾT NỐI', 'Không thể kết nối đến máy chủ.');
             }
         }
 
-        // --- CÁC HÀM PHỤ TRỢ (GIỮ NGUYÊN) ---
-        function redirectToKey(link, timeLeft) {
-            renderResult('valid', 'THÀNH CÔNG', 'Đang chuyển hướng...');
-            document.getElementById('key-area').style.display = 'block';
-            document.getElementById('key-text').innerText = link;
-            let mins = Math.ceil(timeLeft / 60);
-            document.getElementById('timer-text').innerText = `Hạn dùng: ${mins} phút`;
-            setTimeout(() => window.open(link, '_blank'), 1500);
-        }
-
-        function showSuccess(keyText, timeLeft) {
-            renderResult('valid', 'KEY HỢP LỆ', 'Copy key bên dưới:');
-            document.getElementById('key-area').style.display = 'block';
-            document.getElementById('key-text').innerText = keyText;
-            document.getElementById('timer-text').innerText = `Còn lại: ${Math.ceil(timeLeft / 60)} phút`;
-        }
-
-        // Transaction an toàn (Chống hack/trùng lặp)
+        // Hàm kích hoạt key lần đầu (set activated_at = now)
         async function activateKeyAtomic(keyId) {
             const docRef = db.collection('keys').doc(keyId);
             try {
                 await db.runTransaction(async (tx) => {
                     const snap = await tx.get(docRef);
-                    if(!snap.exists) throw "Err";
-                    const d = snap.data();
-                    if(d.activated_at) throw "Activated";
-                    if(d.used === true) throw "Used";
-                    const now = Math.floor(Date.now()/1000);
-                    tx.update(docRef, { activated_at: now, last_used: now });
+                    if (!snap.exists) throw new Error('NOT_FOUND');
+                    const d = snap.data() || {};
+
+                    // Kiểm tra đã kích hoạt chưa
+                    if (d.activated_at && d.activated_at !== null && !d.activated_at.nullValue) {
+                        throw new Error('ALREADY_ACTIVATED');
+                    }
+
+                    // Nếu key đã bị đánh dấu permanent used -> chặn
+                    if (d.used === true || d.used === 'true') throw new Error('ALREADY_USED');
+
+                    const now = Math.floor(Date.now() / 1000);
+
+                    // Set activated_at và last_used = now
+                    tx.update(docRef, {
+                        activated_at: now,
+                        last_used: now
+                    });
                 });
-                return {ok: true};
-            } catch(e) { return {ok: false, error: e}; }
+                return { ok: true };
+            } catch (e) {
+                return { ok: false, error: e };
+            }
         }
 
         async function markKeyAsUsedAtomic(keyId) {
@@ -398,53 +470,169 @@
             try {
                 await db.runTransaction(async (tx) => {
                     const snap = await tx.get(docRef);
-                    const d = snap.data();
-                    const now = Math.floor(Date.now()/1000);
-                    let act = Number(d.activated_at)||0;
-                    if(act > now*10) act = Math.floor(act/1000);
-                    
-                    if(!act) throw "NotAct";
-                    if(act + (Number(d.expires_seconds)||3600) <= now) throw "Expired";
-                    
-                    let last = Number(d.last_used)||0;
-                    if(last > now*10) last = Math.floor(last/1000);
-                    if(last && (now - last < COOLDOWN_SECONDS)) throw "Cooldown";
+                    if (!snap.exists) throw new Error('NOT_FOUND');
+                    const d = snap.data() || {};
 
+                    // Nếu key đã bị đánh dấu permanent used -> chặn
+                    if (d.used === true || d.used === 'true') throw new Error('ALREADY_USED');
+
+                    const now = Math.floor(Date.now() / 1000);
+
+                    // Kiểm tra expiry dựa trên activated_at (logic mới)
+                    let activatedAt = null;
+                    if (d.activated_at && d.activated_at !== null && !d.activated_at.nullValue) {
+                        activatedAt = Number(d.activated_at) || Number(d.activated_at?.integerValue) || 0;
+                        if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
+                    }
+
+                    // Nếu chưa kích hoạt thì chưa thể mark used (phải kích hoạt trước)
+                    if (!activatedAt) throw new Error('NOT_ACTIVATED');
+
+                    const expires = Number(d.expires_seconds) || Number(d.expires_seconds?.integerValue) || 3600;
+                    if (activatedAt + expires <= now) throw new Error('EXPIRED');
+
+                    // Kiểm tra cooldown last_used
+                    let lastUsed = Number(d.last_used) || Number(d.lastUsed) || Number(d.last_used?.integerValue) || Number(d.lastUsed?.integerValue) || 0;
+                    if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
+                    const remaining = COOLDOWN_SECONDS - (now - lastUsed);
+                    if (lastUsed && remaining > 0) throw new Error('ALREADY_USED:' + remaining);
+
+                    // Cập nhật last_used = now (không đánh dấu permanent used)
                     tx.update(docRef, { last_used: now });
                 });
-                return {ok: true};
-            } catch(e) { return {ok: false, error: e}; }
+                return { ok: true };
+            } catch (e) {
+                return { ok: false, error: e };
+            }
+        }
+
+        async function autoGetKey() {
+            // KIỂM TRA SESSION TRƯỚC (Tránh load lại tốn quota khi F5)
+            const cachedLink = sessionStorage.getItem('last_active_link');
+            const cachedTime = sessionStorage.getItem('last_active_time');
+            const now = Math.floor(Date.now() / 1000);
+
+            if (cachedLink && cachedTime && (now - Number(cachedTime) < 300)) {
+                renderResult('valid', 'LẤY KEY THÀNH CÔNG', 'Đang sử dụng lại key vừa lấy...');
+                document.getElementById('key-area').style.display = 'block';
+                document.getElementById('key-text').innerText = cachedLink;
+                document.getElementById('timer-text').innerText = `Còn lại: ~${Math.ceil((300 - (now - Number(cachedTime))) / 60)} phút`;
+                return;
+            }
+
+            renderResult('valid', 'ĐANG TÌM KEY', 'Đang tìm key chưa dùng...');
+            try {
+                // GIẢM LIMIT từ 50 xuống 5 để tiết kiệm QUOTA ĐỌC
+                const q = await db.collection('keys').where('used', '==', false).limit(5).get();
+                const docs = (q && q.docs) ? q.docs.slice() : [];
+                if (!docs.length) {
+                    renderResult('error', 'HẾT KEY', 'Hiện tại kho key trống. Vui lòng thử lại sau.');
+                    return;
+                }
+
+                // Chọn ngẫu nhiên và thử từng document nếu cần
+                const order = docs.map((_, i) => i);
+                while (order.length) {
+                    const idx = Math.floor(Math.random() * order.length);
+                    const doc = docs[order.splice(idx, 1)[0]];
+                    const id = doc.id;
+                    const data = doc.data() || {};
+
+                    const link = data.steplink1 || data.short_link || data.shortlink || null;
+                    const expires = Number(data.expires_seconds) || 3600;
+
+                    let activatedAt = null;
+                    if (data.activated_at && data.activated_at !== null && !data.activated_at.nullValue) {
+                        activatedAt = Number(data.activated_at) || 0;
+                        if (activatedAt > now * 10) activatedAt = Math.floor(activatedAt / 1000);
+                    }
+
+                    if (activatedAt && (activatedAt + expires) <= now) continue;
+
+                    let lastUsed = Number(data.last_used) || 0;
+                    if (lastUsed > now * 10) lastUsed = Math.floor(lastUsed / 1000);
+                    if (lastUsed && (COOLDOWN_SECONDS - (now - lastUsed)) > 0) continue;
+
+                    if (!link) continue;
+
+                    // Thực hiện kích hoạt hoặc đánh dấu dùng
+                    const opRes = !activatedAt ? await activateKeyAtomic(id) : await markKeyAsUsedAtomic(id);
+
+                    if (opRes.ok) {
+                        const timeLeft = activatedAt ? (activatedAt + expires) - now : expires;
+
+                        // LƯU VÀO SESSION để không phải gọi Firebase nếu F5 trong 5 phút
+                        sessionStorage.setItem('last_active_link', link);
+                        sessionStorage.setItem('last_active_time', now.toString());
+
+                        renderResult('valid', 'LẤY KEY THÀNH CÔNG', 'Đã tìm được key, đang chuyển hướng...');
+                        document.getElementById('key-area').style.display = 'block';
+                        document.getElementById('key-text').innerText = link;
+                        document.getElementById('timer-text').innerText = `Còn lại: ${Math.ceil(timeLeft / 60)} phút`;
+                        window.open(link, '_blank');
+                        return;
+                    }
+                }
+
+                renderResult('error', 'HẾT KEY', 'Không tìm thấy key hợp lệ.');
+            } catch (e) {
+                console.error(e);
+                renderResult('error', 'LỖI KẾT NỐI', 'Không thể lấy key.');
+            }
         }
 
         function renderResult(type, title, msg) {
             document.getElementById('loader').style.display = 'none';
-            const c = document.getElementById('content');
-            c.style.display = 'block';
-            c.style.animation = "popIn 0.5s ease";
-            
-            const i = document.getElementById('icon-area');
-            const t = document.getElementById('status-title');
-            const m = document.getElementById('status-msg');
-            t.innerText = title; m.innerText = msg;
+            const content = document.getElementById('content');
+            content.style.display = 'block';
 
-            if(type==='valid') { i.innerHTML='<i class="fas fa-check-circle status-icon valid"></i>'; t.style.color='#00ff88'; }
-            else if(type==='expired') { i.innerHTML='<i class="fas fa-times-circle status-icon expired"></i>'; t.style.color='#ff4b2b'; }
-            else { i.innerHTML='<i class="fas fa-exclamation-triangle status-icon error"></i>'; t.style.color='#ffcc00'; }
+            // Trigger animation
+            content.style.animation = "popIn 0.5s ease";
+
+            const iconDiv = document.getElementById('icon-area');
+            const titleDiv = document.getElementById('status-title');
+            const msgDiv = document.getElementById('status-msg');
+
+            titleDiv.innerText = title;
+            msgDiv.innerText = msg;
+
+            if (type === 'valid') {
+                iconDiv.innerHTML = '<i class="fas fa-check-circle status-icon valid"></i>';
+                titleDiv.style.color = '#00ff88';
+            } else if (type === 'expired') {
+                iconDiv.innerHTML = '<i class="fas fa-times-circle status-icon expired"></i>';
+                titleDiv.style.color = '#ff4b2b';
+            } else {
+                iconDiv.innerHTML = '<i class="fas fa-exclamation-triangle status-icon error"></i>';
+                titleDiv.style.color = '#ffcc00';
+            }
         }
 
         function copyKey() {
-            navigator.clipboard.writeText(document.getElementById('key-text').innerText).then(() => {
-                const b = document.querySelector('.copy-btn');
-                b.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => b.innerHTML = 'COPY', 2000);
+            const text = document.getElementById('key-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> COPIED';
+                btn.style.background = 'linear-gradient(90deg, #00b09b, #96c93d)';
+
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 2000);
             });
         }
 
-        window.onload = function() {
-            const p = new URLSearchParams(location.search);
-            if(p.get('key')||p.get('keys')||p.get('k')) checkKey();
-            else document.getElementById('start-screen').style.display = 'block';
-        }
+        window.onload = function () {
+            const params = new URLSearchParams(window.location.search);
+            const keyParam = params.get('key') || params.get('keys') || params.get('k');
+            if (keyParam) {
+                checkKey();
+            } else {
+                autoGetKey();
+            }
+        };
     </script>
 </body>
+
 </html>
